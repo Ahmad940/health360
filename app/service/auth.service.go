@@ -3,10 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/Ahmad940/health360/app/model"
-	"github.com/Ahmad940/health360/pkg/util"
 	"github.com/Ahmad940/health360/platform/db"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )

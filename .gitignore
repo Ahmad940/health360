@@ -4,3 +4,4 @@
 .VSCodeCounter
 build
 dropify
+.env
