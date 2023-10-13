@@ -9,23 +9,35 @@ import (
 )
 
 const (
-	ENV_KEY_PORT         string = "PORT"
-	ENV_KEY_JWT_SECRET   string = "JWT_SECRET"
-	ENV_KEY_JWT_DURATION string = "JWT_DURATION"
-	ENV_KEY_DATABASE_URL string = "DATABASE_URL"
+	ENV_KEY_PORT                 string = "PORT"
+	ENV_KEY_JWT_SECRET           string = "JWT_SECRET"
+	ENV_KEY_JWT_DURATION         string = "JWT_DURATION"
+	ENV_KEY_DATABASE_URL         string = "DATABASE_URL"
+	ENV_KEY_REDIS_ADDRESS        string = "REDIS_ADDRESS"
+	ENV_KEY_REDIS_PASSWORD       string = "REDIS_PASSWORD"
+	ENV_KEY_AFRICA_TALK_USERNAME string = "AFRICA_TALK_USERNAME"
+	ENV_KEY_AFRICA_TALK_API_KEY  string = "AFRICA_TALK_API_KEY"
 )
 
 type envVar struct {
-	PORT         string
-	DATABASE_URL string
-	JWT_SECRET   string
-	JWT_DURATION int64
+	PORT                 string
+	DATABASE_URL         string
+	JWT_SECRET           string
+	JWT_DURATION         int64
+	REDIS_ADDRESS        string
+	REDIS_PASSWORD       string
+	AFRICA_TALK_USERNAME string
+	AFRICA_TALK_API_KEY  string
 }
 
 func GetEnv() *envVar {
 	config := &envVar{
-		JWT_SECRET:   os.Getenv(ENV_KEY_JWT_SECRET),
-		DATABASE_URL: os.Getenv(ENV_KEY_DATABASE_URL),
+		JWT_SECRET:           os.Getenv(ENV_KEY_JWT_SECRET),
+		DATABASE_URL:         os.Getenv(ENV_KEY_DATABASE_URL),
+		REDIS_ADDRESS:        os.Getenv(ENV_KEY_REDIS_ADDRESS),
+		REDIS_PASSWORD:       os.Getenv(ENV_KEY_REDIS_PASSWORD),
+		AFRICA_TALK_USERNAME: os.Getenv(ENV_KEY_AFRICA_TALK_USERNAME),
+		AFRICA_TALK_API_KEY:  os.Getenv(ENV_KEY_AFRICA_TALK_API_KEY),
 	}
 
 	// parsing jwt_duration

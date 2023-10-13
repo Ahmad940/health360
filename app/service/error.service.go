@@ -7,6 +7,17 @@ import (
 )
 
 func ErrorResponse(err error, ctx *fiber.Ctx) error {
+	if err.Error() == constant.SqlNotFoundText {
+		return ctx.Status(fiber.StatusNotFound).JSON(model.ErrorResponse{
+			Message: "no record found",
+		})
+	}
+	if err.Error() == "redis: nil" {
+		return ctx.Status(fiber.StatusNotFound).JSON(model.ErrorResponse{
+			Message: "no key found or session expired",
+		})
+	}
+
 	return ctx.Status(fiber.StatusBadRequest).JSON(model.ErrorResponse{
 		Message: err.Error(),
 	})

@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/Ahmad940/health360/pkg/config"
@@ -13,9 +12,8 @@ func GenerateToken(id string) (string, error) {
 	claims := jwt.MapClaims{
 		"exp": time.Now().Add(time.Hour * time.Duration(config.GetEnv().JWT_DURATION)).Unix(),
 		"id":  id,
+		"age": time.Now().Unix(),
 	}
-
-	fmt.Println("Key", config.GetEnv().JWT_SECRET)
 
 	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

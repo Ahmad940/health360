@@ -16,11 +16,12 @@ const (
 type User struct {
 	ID string `json:"id" gorm:"primaryKey; type:varchar; not null; unique"`
 
-	FullName    string `json:"full_name" gorm:"type:varchar; not null; unique" validate:"required"`
+	FullName    string `json:"full_name" gorm:"type:varchar; unique"`
+	Country     string `json:"country" gorm:"type:varchar; index" validate:"required"`
 	CountryCode string `json:"country_code" gorm:"type:varchar; not null" validate:"required"`
-	Phone       string `json:"phone" gorm:"type:int; not null" validate:"required"`
+	PhoneNumber string `json:"phone_number" gorm:"type:varchar; not null" validate:"required"`
 
-	Role UserRole `json:"role" gorm:"type:user_role; not null; default:user"`
+	Role UserRole `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
 
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt time.Time    `json:"updated_at"`
@@ -28,7 +29,19 @@ type User struct {
 }
 
 type Auth struct {
-	UserName string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Role     string `json:"role"`
+	ID          string `json:"-"`
+	Country     string `json:"country" validate:"required"`
+	CountryCode string `json:"country_code" validate:"required"`
+	PhoneNumber string `json:"phone_number" validate:"required"`
+}
+
+type Login struct {
+	CountryCode string `json:"country_code" validate:"required"`
+	PhoneNumber string `json:"phone_number" validate:"required"`
+	OTP         string `json:"otp" validate:"required"`
+}
+
+type AuthResponse struct {
+	Token string `json:"token"`
+	User  User   `json:"user"`
 }
