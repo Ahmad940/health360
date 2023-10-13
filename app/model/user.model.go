@@ -8,9 +8,9 @@ import (
 type UserRole string
 
 const (
-	AdminRoleAdmin      = UserRole("admin")
-	ConsultantRoleAdmin = UserRole("consultant")
-	UserRoleAdmin       = UserRole("user")
+	AdminRoleAdmin      = string("admin")
+	ConsultantRoleAdmin = string("consultant")
+	UserRoleAdmin       = string("user")
 )
 
 type User struct {
@@ -21,7 +21,7 @@ type User struct {
 	CountryCode string `json:"country_code" gorm:"type:varchar; not null" validate:"required"`
 	PhoneNumber string `json:"phone_number" gorm:"type:varchar; not null" validate:"required"`
 
-	Role UserRole `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
+	Role string `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
 
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt time.Time    `json:"updated_at"`
@@ -38,10 +38,10 @@ type UpdateUser struct {
 }
 
 type UpdateUserAdmin struct {
-	ID          string   `json:"id" validate:"required"`
-	FullName    string   `json:"full_name"`
-	Country     string   `json:"country"`
-	CountryCode string   `json:"country_code"`
-	PhoneNumber string   `json:"phone_number"`
-	Role        UserRole `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
+	ID          string `json:"id" validate:"required"`
+	FullName    string `json:"full_name"`
+	Country     string `json:"country"`
+	CountryCode string `json:"country_code"`
+	PhoneNumber string `json:"phone_number"`
+	Role        string `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
 }
