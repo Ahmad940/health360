@@ -25,23 +25,23 @@ type User struct {
 
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt time.Time    `json:"updated_at"`
-	DeletedAt sql.NullTime `gorm:"index"`
+	DeletedAt sql.NullTime `json:"-" gorm:"index"`
 }
 
-type Auth struct {
-	ID          string `json:"-"`
-	Country     string `json:"country" validate:"required"`
-	CountryCode string `json:"country_code" validate:"required"`
-	PhoneNumber string `json:"phone_number" validate:"required"`
+type UpdateUser struct {
+	ID string `json:"id" validate:"required"`
+
+	FullName    string `json:"full_name"`
+	Country     string `json:"country"`
+	CountryCode string `json:"country_code"`
+	PhoneNumber string `json:"phone_number"`
 }
 
-type Login struct {
-	CountryCode string `json:"country_code" validate:"required"`
-	PhoneNumber string `json:"phone_number" validate:"required"`
-	OTP         string `json:"otp" validate:"required"`
-}
-
-type AuthResponse struct {
-	Token string `json:"token"`
-	User  User   `json:"user"`
+type UpdateUserAdmin struct {
+	ID          string   `json:"id" validate:"required"`
+	FullName    string   `json:"full_name"`
+	Country     string   `json:"country"`
+	CountryCode string   `json:"country_code"`
+	PhoneNumber string   `json:"phone_number"`
+	Role        UserRole `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
 }

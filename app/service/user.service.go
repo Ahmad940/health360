@@ -2,24 +2,57 @@ package service
 
 import (
 	"github.com/Ahmad940/health360/app/model"
-	"github.com/Ahmad940/health360/pkg/util"
 	"github.com/Ahmad940/health360/platform/db"
+	"gorm.io/gorm/clause"
 )
 
-// UpdateUserPassword update user password
-func UpdateUserPassword(username string, password string) error {
-	var user model.User
+func GetAUser(id string) (model.User, error) {
+	users := model.User{}
 
-	hashedPassword, err := util.HashPassword(password)
+	err := db.DB.Where("id = ?", id).First(&users).Error
 	if err != nil {
-		return err
+		return model.User{}, err
 	}
 
-	return db.DB.Where("username = ?", username).First(&user).Update("password", hashedPassword).Error
+	return users, nil
 }
 
-// DeleteUser delete user
-func DeleteUser(username string) error {
-	var user model.User
-	return db.DB.Unscoped().Where("username = ?", username).First(&user).Delete(&user).Error
+func GetAllUsers() ([]model.User, error) {
+	users := []model.User{}
+
+	err := db.DB.Find(&users).Error
+	if err != nil {
+		return []model.User{}, err
+	}
+
+	return users, nil
+}
+
+// UpdateUserPassword update user password
+func UpdateUser(param model.UpdateUser) (model.User, error) {
+	user := model.User{
+		ID:       param.ID,
+		FullName: param.FullName,
+	}
+
+	err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
+	if err != nil {
+		return model.User{}, nil
+	}
+
+	return user, nil
+}
+
+func UpdateUserAdmin(param model.UpdateUserAdmin) (model.User, error) {
+	user := model.User{
+		ID:   param.ID,
+		Role: model.UserRoleAdmin,
+	}
+
+	err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
+	if err != nil {
+		return model.User{}, nil
+	}
+
+	return user, nil
 }

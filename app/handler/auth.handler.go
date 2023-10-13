@@ -23,7 +23,7 @@ func RequestOTP(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
-	// retrieving the token by passing request body
+	// Requesting OTP
 	err = service.RequestOTP(body)
 	if err != nil {
 		return service.ErrorResponse(err, ctx)
