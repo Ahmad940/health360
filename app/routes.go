@@ -18,13 +18,10 @@ var cfg = websocket.Config{
 }
 
 func AttachRoutes(app *fiber.App) {
+	api := app.Group("/api")
 
-	base := app.Group("/")
-
-	app.Get("/ws/:id", websocket.New(ws.Stream, cfg))
-
-	api := base.Group("/api")
 	api.Get("/", func(c *fiber.Ctx) error { return c.Status(200).JSON(fiber.Map{"message": "Hello, World!"}) })
+	app.Get("/ws/:id", websocket.New(ws.Stream, cfg))
 
 	// routes
 	router.Authentication(api)
