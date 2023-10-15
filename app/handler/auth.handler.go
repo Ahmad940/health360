@@ -9,6 +9,24 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func Profile(ctx *fiber.Ctx) error {
+	// retrieving token meta data
+	tokenData, err := util.ExtractTokenMetadata(ctx)
+
+	if err != nil {
+		return service.ErrorResponse(err, ctx)
+	}
+
+	// fetching the current logged user base on the mid retrieved from meta data
+	user, err := service.GetAUser(tokenData.ID)
+
+	if err != nil {
+		return service.ErrorResponse(err, ctx)
+	}
+
+	return ctx.JSON(user)
+}
+
 func RequestOTP(ctx *fiber.Ctx) error {
 	var body model.Auth
 	// parsing response body

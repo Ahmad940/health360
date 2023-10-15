@@ -14,9 +14,8 @@ import (
 
 // TokenMetadata struct to describe metadata in JWT.
 type TokenMetadata struct {
-	Expires float64 `json:"expires"`
-	ID      string  `json:"id"`
-	Age     float64 `json:"age"`
+	ID  string  `json:"id"`
+	Age float64 `json:"age"`
 }
 
 // ExtractTokenMetadata func to extract metadata from JWT.
@@ -31,7 +30,6 @@ func ExtractTokenMetadata(c *fiber.Ctx) (*TokenMetadata, error) {
 	if ok && token.Valid {
 		// Expires time.
 		id := claims["id"].(string)
-		expires := claims["exp"].(float64)
 		age := claims["age"].(float64)
 
 		// validating user
@@ -47,9 +45,8 @@ func ExtractTokenMetadata(c *fiber.Ctx) (*TokenMetadata, error) {
 		}
 
 		return &TokenMetadata{
-			ID:      id,
-			Expires: expires,
-			Age:     age,
+			ID:  id,
+			Age: age,
 		}, nil
 	}
 

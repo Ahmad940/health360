@@ -10,7 +10,6 @@ import (
 func GenerateToken(id string) (string, error) {
 	// Create the Claims
 	claims := jwt.MapClaims{
-		"exp": time.Now().Add(time.Hour * time.Duration(config.GetEnv().JWT_DURATION)).Unix(),
 		"id":  id,
 		"age": time.Now().Unix(),
 	}
