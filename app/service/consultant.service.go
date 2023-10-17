@@ -10,7 +10,7 @@ import (
 func GetAllConsultants() ([]model.Consultant, error) {
 	var consultants []model.Consultant
 
-	err := db.DB.Preload("User").Find(&consultants).Error
+	err := db.DB.Find(&consultants).Error
 	if err != nil {
 		return []model.Consultant{}, err
 	}
@@ -30,12 +30,12 @@ func GetConsultantsBySpecialization(specialization string) ([]model.Consultant, 
 	return consultants, nil
 }
 
-func AddConsultant(param model.ModifyConsultantParam) (model.Consultant, error) {
+func AddConsultant(param model.AddConsultantParam) (model.Consultant, error) {
 	var consultant model.Consultant
-	err := db.DB.Preload("User").Model(&consultant).Clauses(clause.Returning{}).Create(&model.Consultant{
+	err := db.DB.Model(&consultant).Clauses(clause.Returning{}).Create(&model.Consultant{
 		ID:     gonanoid.Must(),
 		UserID: param.UserID,
-	}).Error
+	}).Preload("User").Error
 	if err != nil {
 		return model.Consultant{}, err
 	}
@@ -43,14 +43,14 @@ func AddConsultant(param model.ModifyConsultantParam) (model.Consultant, error) 
 	return consultant, nil
 }
 
-func UpdateConsultant(param model.ModifyConsultantParam) (model.Consultant, error) {
+func UpdateConsultant(param model.UpdateConsultantParam) (model.Consultant, error) {
 	var consultant model.Consultant = model.Consultant{
 		UserID:          param.ID,
 		Services:        param.Services,
 		Specializations: param.Specializations,
 	}
 	// err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
-	err := db.DB.Model(&consultant).Preload("User").Clauses(clause.Returning{}).Updates(param).Error
+	err := db.DB.Model(&consultant).Clauses(clause.Returning{}).Updates(param).Error
 	if err != nil {
 		return model.Consultant{}, err
 	}

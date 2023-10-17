@@ -28,7 +28,7 @@ func GetConsultantsBySpecializations(ctx *fiber.Ctx) error {
 }
 
 func AddConsultant(ctx *fiber.Ctx) error {
-	var body model.ModifyConsultantParam
+	var body model.AddConsultantParam
 	// parsing response body
 	err := ctx.BodyParser(&body)
 	if err != nil {
@@ -51,7 +51,7 @@ func AddConsultant(ctx *fiber.Ctx) error {
 }
 
 func UpdateConsultant(ctx *fiber.Ctx) error {
-	var body model.ModifyConsultantParam
+	var body model.UpdateConsultantParam
 	// parsing response body
 	err := ctx.BodyParser(&body)
 	if err != nil {

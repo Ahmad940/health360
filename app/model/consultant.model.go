@@ -12,15 +12,21 @@ type Consultant struct {
 	Services        []string `json:"services" gorm:"type:varchar[]"`
 	Specializations []string `json:"specializations" gorm:"type:varchar[]"`
 
-	User User `json:"user"`
+	User User `json:"user" gorm:"foreignKey:UserID;reference:ID"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type ModifyConsultantParam struct {
-	ID              string   `json:"id"`
+type AddConsultantParam struct {
 	UserID          string   `json:"user_id" validate:"required"`
+	Bio             string   `json:"full_name"`
+	Services        []string `json:"services"`
+	Specializations []string `json:"specializations"`
+}
+
+type UpdateConsultantParam struct {
+	ID              string   `json:"id" validate:"required"`
 	Bio             string   `json:"full_name"`
 	Services        []string `json:"services"`
 	Specializations []string `json:"specializations"`
