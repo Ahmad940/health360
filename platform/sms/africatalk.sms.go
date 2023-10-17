@@ -60,5 +60,7 @@ func SendSms(to string, message string) error {
 		return errors.New(string(body))
 	}
 
+	fmt.Println("Response", string(body))
+
 	return nil
 }

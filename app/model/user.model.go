@@ -24,6 +24,7 @@ type User struct {
 	PhoneNumber string      `json:"phone_number" gorm:"type:varchar; not null" validate:"required"`
 	Age         null.Int    `json:"age" gorm:"type:int" validate:"required"`
 	Gender      null.String `json:"gender" gorm:"type:varchar" validate:"required"`
+	Profile     string      `json:"profile" gorm:"type:varchar;default:https://res.cloudinary.com/mid-assets/image/upload/v1654768308/mid/assets/profile_img_x2xnv5.png"`
 
 	Role string `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
 
