@@ -2,9 +2,11 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 
 	"github.com/Ahmad940/health360/app/model"
+	"github.com/Ahmad940/health360/pkg/util"
 	"github.com/Ahmad940/health360/platform/db"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"gorm.io/gorm/clause"
@@ -49,12 +51,18 @@ func AddConsultant(param model.AddConsultantParam) (model.Consultant, error) {
 		return model.Consultant{}, errors.New("consultant already added")
 	}
 
+	// check if specialization valid
+	err = CheckSpecializationValidity(param.Specializations)
+	if err != nil {
+		return model.Consultant{}, err
+	}
+
 	err = db.DB.Model(&consultant).Create(&model.Consultant{
 		ID:              gonanoid.Must(),
 		UserID:          param.UserID,
 		Services:        param.Services,
 		Bio:             param.Bio,
-		Specializations: consultant.Specializations,
+		Specializations: param.Specializations,
 	}).Error
 	if err != nil {
 		return model.Consultant{}, err
@@ -73,8 +81,15 @@ func UpdateConsultant(param model.UpdateConsultantParam) (model.Consultant, erro
 	var consultant model.Consultant = model.Consultant{
 		ID: param.ID,
 	}
+
+	// check if specialization valid
+	err := CheckSpecializationValidity(param.Specializations)
+	if err != nil {
+		return model.Consultant{}, err
+	}
+
 	// err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
-	err := db.DB.Model(&consultant).Clauses(clause.Returning{}).Updates(model.Consultant{
+	err = db.DB.Model(&consultant).Clauses(clause.Returning{}).Updates(model.Consultant{
 		Bio:             param.Bio,
 		Services:        param.Services,
 		Specializations: param.Specializations,
@@ -98,6 +113,16 @@ func RemoveConsultant(id string) error {
 	err := db.DB.Where("id = ?", id).Delete(&consultant).Error
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func CheckSpecializationValidity(specializations []string) error {
+	for _, specialization := range specializations {
+		if isPresent := util.IsItemPresentInArray(specialization, GetAllCategories()); !isPresent {
+			return fmt.Errorf("%v is not found in categories", specialization)
+		}
 	}
 
 	return nil
