@@ -36,7 +36,7 @@ func UpdateUser(param model.UpdateUser) (model.User, error) {
 
 	err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
 	if err != nil {
-		return model.User{}, nil
+		return model.User{}, err
 	}
 
 	return user, nil
@@ -50,7 +50,7 @@ func UpdateUserAdmin(param model.UpdateUserAdmin) (model.User, error) {
 
 	err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
 	if err != nil {
-		return model.User{}, nil
+		return model.User{}, err
 	}
 
 	return user, nil

@@ -18,7 +18,7 @@ const (
 type User struct {
 	ID string `json:"id" gorm:"primaryKey; type:varchar; not null; unique"`
 
-	FullName    string      `json:"full_name" gorm:"type:varchar; unique"`
+	FullName    string      `json:"full_name" gorm:"type:varchar"`
 	Country     string      `json:"country" gorm:"type:varchar; index" validate:"required"`
 	CountryCode string      `json:"country_code" gorm:"type:varchar; not null" validate:"required"`
 	PhoneNumber string      `json:"phone_number" gorm:"type:varchar; not null" validate:"required"`
