@@ -7,6 +7,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func GetSpecializationCategories(ctx *fiber.Ctx) error {
+	return ctx.JSON(service.GetAllCategories())
+}
+
 func GetAllConsultants(ctx *fiber.Ctx) error {
 	consultants, err := service.GetAllConsultants()
 	if err != nil {

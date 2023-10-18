@@ -31,8 +31,7 @@ func GetAllUsers() ([]model.User, error) {
 // UpdateUserPassword update user password
 func UpdateUser(param model.UpdateUser) (model.User, error) {
 	user := model.User{
-		ID:       param.ID,
-		FullName: param.FullName,
+		ID: param.ID,
 	}
 
 	err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error

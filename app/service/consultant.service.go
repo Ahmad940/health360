@@ -1,16 +1,23 @@
 package service
 
 import (
+	"errors"
+	"reflect"
+
 	"github.com/Ahmad940/health360/app/model"
 	"github.com/Ahmad940/health360/platform/db"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"gorm.io/gorm/clause"
 )
 
+func GetAllCategories() []string {
+	return []string{"cardiology", "hair issues", "general checkup", "optician", "dermatologist"}
+}
+
 func GetAllConsultants() ([]model.Consultant, error) {
 	var consultants []model.Consultant
 
-	err := db.DB.Find(&consultants).Error
+	err := db.DB.Preload("User").Find(&consultants).Error
 	if err != nil {
 		return []model.Consultant{}, err
 	}
@@ -21,7 +28,7 @@ func GetAllConsultants() ([]model.Consultant, error) {
 func GetConsultantsBySpecialization(specialization string) ([]model.Consultant, error) {
 	var consultants []model.Consultant
 
-	err := db.DB.Preload("User").Where("specializations @> ARRAY[?]::varchar[]", []string{"cardiology"}).Find(&consultants).Error
+	err := db.DB.Preload("User").Where("specializations @> ARRAY[?]::varchar[]", []string{specialization}).Find(&consultants).Error
 
 	if err != nil {
 		return []model.Consultant{}, err
@@ -32,12 +39,31 @@ func GetConsultantsBySpecialization(specialization string) ([]model.Consultant, 
 
 func AddConsultant(param model.AddConsultantParam) (model.Consultant, error) {
 	var consultant model.Consultant
-	err := db.DB.Model(&consultant).Clauses(clause.Returning{}).Create(&model.Consultant{
-		ID:     gonanoid.Must(),
-		UserID: param.UserID,
-	}).Preload("User").Error
+	// Preload the user record for the consultant.
+	err := db.DB.First(&consultant, "user_id = ?", param.UserID).Error
+	if SqlErrorIgnoreNotFound(err) != nil {
+		return model.Consultant{}, nil
+	}
+
+	if (!reflect.DeepEqual(consultant, model.Consultant{})) {
+		return model.Consultant{}, errors.New("consultant already added")
+	}
+
+	err = db.DB.Model(&consultant).Create(&model.Consultant{
+		ID:              gonanoid.Must(),
+		UserID:          param.UserID,
+		Services:        param.Services,
+		Bio:             param.Bio,
+		Specializations: consultant.Specializations,
+	}).Error
 	if err != nil {
 		return model.Consultant{}, err
+	}
+
+	// Preload the user record for the consultant.
+	err = db.DB.Preload("User").First(&consultant, "user_id = ?", param.UserID).Error
+	if err != nil {
+		return model.Consultant{}, nil
 	}
 
 	return consultant, nil
@@ -45,14 +71,22 @@ func AddConsultant(param model.AddConsultantParam) (model.Consultant, error) {
 
 func UpdateConsultant(param model.UpdateConsultantParam) (model.Consultant, error) {
 	var consultant model.Consultant = model.Consultant{
-		UserID:          param.ID,
-		Services:        param.Services,
-		Specializations: param.Specializations,
+		ID: param.ID,
 	}
 	// err := db.DB.Model(&user).Clauses(clause.Returning{}).Updates(param).Error
-	err := db.DB.Model(&consultant).Clauses(clause.Returning{}).Updates(param).Error
+	err := db.DB.Model(&consultant).Clauses(clause.Returning{}).Updates(model.Consultant{
+		Bio:             param.Bio,
+		Services:        param.Services,
+		Specializations: param.Specializations,
+	}).Error
 	if err != nil {
 		return model.Consultant{}, err
+	}
+
+	// Preload the user record for the consultant.
+	err = db.DB.Preload("User").First(&consultant, "id = ?", param.ID).Error
+	if err != nil {
+		return model.Consultant{}, nil
 	}
 
 	return consultant, nil
