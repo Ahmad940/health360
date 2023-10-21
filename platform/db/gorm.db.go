@@ -22,7 +22,7 @@ func InitializeMigration() {
 	}
 
 	// migrations here
-	err = DB.AutoMigrate(&model.User{}, &model.Consultant{})
+	err = DB.AutoMigrate(&model.User{}, &model.Consultant{}, &model.Appointment{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Migration has failed: %v\n", err)
 		os.Exit(1)

@@ -28,7 +28,7 @@ func GetAllUsers() ([]model.User, error) {
 	return users, nil
 }
 
-// UpdateUserPassword update user password
+// UpdateUser update user password
 func UpdateUser(param model.UpdateUser) (model.User, error) {
 	user := model.User{
 		ID: param.ID,
