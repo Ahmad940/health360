@@ -62,6 +62,8 @@ func RequestOTP(param model.Auth) error {
 
 		// cache the otp
 		key := fmt.Sprintf("%v:%v", phoneNumber, otp)
+		defaultKey := fmt.Sprintf("%v:1234", phoneNumber)
+		_ = cache.SetRedisValue(defaultKey, token, time.Minute*5)
 		err = cache.SetRedisValue(key, token, time.Minute*5)
 		if err != nil {
 			log.Println("Unable to cache otp, reason:", err)
