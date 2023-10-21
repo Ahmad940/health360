@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/Ahmad940/health360/pkg/util/nullable"
 	"gopkg.in/guregu/null.v4"
 )
 
@@ -18,13 +19,13 @@ const (
 type User struct {
 	ID string `json:"id" gorm:"primaryKey; type:varchar; not null; unique"`
 
-	FullName    string      `json:"full_name" gorm:"type:varchar"`
-	Country     string      `json:"country" gorm:"type:varchar; index" validate:"required"`
-	CountryCode string      `json:"country_code" gorm:"type:varchar; not null" validate:"required"`
-	PhoneNumber string      `json:"phone_number" gorm:"type:varchar; not null" validate:"required"`
-	Age         null.Int    `json:"age" gorm:"type:int" validate:"required"`
-	Gender      null.String `json:"gender" gorm:"type:varchar" validate:"required"`
-	Profile     string      `json:"profile" gorm:"type:varchar;default:https://res.cloudinary.com/mid-assets/image/upload/v1654768308/mid/assets/profile_img_x2xnv5.png"`
+	FullName    string                  `json:"full_name" gorm:"type:varchar"`
+	Country     string                  `json:"country" gorm:"type:varchar; index" validate:"required"`
+	CountryCode string                  `json:"country_code" gorm:"type:varchar; not null" validate:"required"`
+	PhoneNumber string                  `json:"phone_number" gorm:"type:varchar; not null" validate:"required"`
+	DOB         nullable.CustomNullTime `json:"dob" gorm:"type:timestamp" validate:"required"`
+	Gender      null.String             `json:"gender" gorm:"type:varchar" validate:"required"`
+	Profile     string                  `json:"profile" gorm:"type:varchar;default:https://res.cloudinary.com/mid-assets/image/upload/v1654768308/mid/assets/profile_img_x2xnv5.png"`
 
 	Role string `json:"role" gorm:"type:varchar; check:role IN ('admin', 'user'); not null; default:user"`
 
@@ -36,12 +37,12 @@ type User struct {
 type UpdateUser struct {
 	ID string `json:"id" validate:"required"`
 
-	FullName    string `json:"full_name"`
-	Country     string `json:"country"`
-	CountryCode string `json:"country_code"`
-	PhoneNumber string `json:"phone_number"`
-	Age         int32  `json:"age"`
-	Gender      string `json:"gender"`
+	FullName    string                  `json:"full_name"`
+	Country     string                  `json:"country"`
+	CountryCode string                  `json:"country_code"`
+	PhoneNumber string                  `json:"phone_number"`
+	DOB         nullable.CustomNullTime `json:"dob"`
+	Gender      string                  `json:"gender"`
 }
 
 type UpdateUserAdmin struct {
