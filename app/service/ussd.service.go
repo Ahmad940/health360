@@ -5,9 +5,9 @@ import "regexp"
 func StartUSSD(sessionId, serviceCode, phoneNumber, text string) string {
 	if text == "" {
 		// This is the first request. Note how we start the response with CON
-		return `Welcome to health360 USSD service, please select an option below:
-        1. Book appointment
-        2. Cancel appointment`
+		return `Welcome to health360 USSD service, please select an option:
+1. Book appointment
+2. Cancel appointment`
 	} else if text == "1" {
 		// Business logic for first level response
 		return `Select category
