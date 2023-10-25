@@ -8,13 +8,11 @@ import (
 )
 
 func StartUSSD(ctx *fiber.Ctx) error {
-	sessionId := ctx.Params("sessionId")
-	serviceCode := ctx.Params("serviceCode")
-	phoneNumber := ctx.Params("phoneNumber")
-	text := ctx.Params("text")
+	sessionId := ctx.FormValue("sessionId")
+	serviceCode := ctx.FormValue("serviceCode")
+	phoneNumber := ctx.FormValue("phoneNumber")
+	text := ctx.FormValue("text")
 
-	fmt.Println("Body", string(ctx.Body()))
-	fmt.Println("form value", ctx.FormValue("sessionId"), ctx.FormValue("serviceCode"), ctx.FormValue("text"))
 	fmt.Println("Session Param 1", ctx.Params("sessionId"), ctx.Params("text"))
 	fmt.Println("Session Query 2", ctx.Query("sessionId"), ctx.Query("text"))
 	fmt.Println("Session GET 3", ctx.Get("sessionId"), ctx.Get("text"))
